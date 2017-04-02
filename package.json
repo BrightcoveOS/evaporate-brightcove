@@ -2,7 +2,6 @@
   "name": "bcuploader",
   "version": "0.0.1",
   "description": "Standalone video uploader for Brightcove OVP",
-  "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
