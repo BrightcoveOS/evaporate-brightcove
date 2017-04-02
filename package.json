@@ -1,0 +1,21 @@
+{
+  "name": "bcuploader",
+  "version": "0.0.1",
+  "description": "Standalone video uploader for Brightcove OVP",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "brightcove",
+    "video",
+    "upload",
+    "browser"
+  ],
+  "author": "Bryce Fisher-Fleig <brycefisher@users.noreply.github.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/brycefisher/bcuploader.git"
+  }
+}
