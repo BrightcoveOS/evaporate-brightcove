@@ -17,5 +17,8 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/brycefisher/bcuploader.git"
+  },
+  "dependencies": {
+    "evaporate": "^2.1.0"
   }
 }
