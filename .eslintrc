@@ -1,0 +1,19 @@
+{
+  "extends": "eslint:recommended",
+  "rules": {
+    "indent": [ "error", 2, { "SwitchCase": 1 } ],
+    "quotes": [ "warn", "single", "avoid-escape" ],
+    "linebreak-style": [ "error", "unix" ],
+    "semi": [ "error", "always" ],
+    "no-console": "warn",
+    "no-debugger": "warn",
+    "arrow-spacing": "error"
+  },
+  "env": {
+    "browser": true,
+  },
+  "globals": {
+    "Evaporate": true,
+    "Promise": true
+  }
+}

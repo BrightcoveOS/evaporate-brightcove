@@ -20,19 +20,19 @@ function uploadVideo(file, uploadUrl, signerUrl, ingestUrl) { // eslint-disable-
       return startS3Upload({
         awsAccessKeyId: response.awsAccessKeyId,
         region: 'us-west-1',
-        videoId,
-        bucket,
-        objectKey,
-        signerUrl,
-        file,
+        videoId: videoId,
+        bucket: bucket,
+        objectKey: objectKey,
+        signerUrl: signerUrl,
+        file: file,
       });
     })
     .then(function () {
       return ingestAsset({
-        ingestUrl,
-        bucket,
-        objectKey,
-        videoId,
+        ingestUrl: ingestUrl,
+        bucket: bucket,
+        objectKey: objectKey,
+        videoId: videoId,
       });
     })
     .then(function () {
