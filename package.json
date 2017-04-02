@@ -4,7 +4,8 @@
   "description": "Standalone video uploader for Brightcove OVP",
   "scripts": {
     "lint": "eslint --ext .js src",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "pretest": "npm run lint",
+    "test": "karma start karma.conf.js"
   },
   "keywords": [
     "brightcove",
@@ -22,6 +23,11 @@
     "evaporate": "^2.1.0"
   },
   "devDependencies": {
-    "eslint": "^3.19.0"
+    "eslint": "^3.19.0",
+    "jasmine-core": "^2.5.2",
+    "karma": "^1.5.0",
+    "karma-cli": "^1.0.1",
+    "karma-firefox-launcher": "^1.0.1",
+    "karma-jasmine": "^1.1.0"
   }
 }
