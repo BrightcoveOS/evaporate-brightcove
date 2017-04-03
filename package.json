@@ -5,7 +5,8 @@
   "scripts": {
     "lint": "eslint --ext .js src",
     "pretest": "npm run lint",
-    "test": "karma start karma.conf.js"
+    "test": "karma start karma.conf.js",
+    "travis": "karma start karma.conf.js --single-run"
   },
   "keywords": [
     "brightcove",
