@@ -1,6 +1,6 @@
 {
   "name": "bcuploader",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Standalone video uploader for Brightcove OVP",
   "scripts": {
     "lint": "eslint --ext .js src",
