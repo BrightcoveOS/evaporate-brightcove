@@ -1,3 +1,5 @@
+/* eslint-env node */
+
 // Karma configuration
 // Generated on Sun Apr 02 2017 20:14:35 GMT-0700 (PDT)
 
@@ -8,7 +10,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'src/*.js',
+      'bcuploader.js',
       'tests/*.js'
     ],
 

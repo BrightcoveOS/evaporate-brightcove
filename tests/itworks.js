@@ -2,6 +2,6 @@
 
 describe('uploadVideo', function() {
   it('works', function() {
-    expect(uploadVideo).to.be.a('function')
+    expect(BCUploader).to.be.a('function')
   });
 });

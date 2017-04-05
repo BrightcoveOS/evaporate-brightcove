@@ -13,7 +13,8 @@
     "browser": true,
   },
   "globals": {
-    "Evaporate": true,
+    "module": true,
+    "require": true,
     "Promise": true
   }
 }

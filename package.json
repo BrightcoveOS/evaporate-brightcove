@@ -2,10 +2,13 @@
   "name": "bcuploader",
   "version": "0.0.2",
   "description": "Standalone video uploader for Brightcove OVP",
+  "main": "src/bcuploader.js",
   "scripts": {
+    "build": "webpack",
     "lint": "eslint --ext .js src",
-    "pretest": "npm run lint",
+    "pretest": "npm run build",
     "test": "karma start karma.conf.js",
+    "pretravis": "npm run build",
     "travis": "karma start karma.conf.js --single-run"
   },
   "keywords": [
@@ -21,6 +24,7 @@
     "url": "https://github.com/brycefisher/bcuploader.git"
   },
   "dependencies": {
+    "aws-sdk": "^2.38.0",
     "evaporate": "^2.1.0"
   },
   "devDependencies": {
@@ -33,6 +37,7 @@
     "karma-firefox-launcher": "^1.0.1",
     "karma-jasmine": "^1.1.0",
     "karma-mocha": "^1.3.0",
-    "mocha": "^3.2.0"
+    "mocha": "^3.2.0",
+    "webpack": "^2.3.3"
   }
 }

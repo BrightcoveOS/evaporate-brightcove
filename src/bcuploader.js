@@ -1,5 +1,7 @@
-/* eslint-disable no-console */
-/* global XMLHttpRequest, document, Evaporate, AWS */
+/* eslint-env browser */
+
+var Evaporate = require('evaporate');
+var AWS = require('aws-sdk');
 
 // Public API
 // - file: a File object from a file input
@@ -57,7 +59,6 @@ function startS3Upload(config) {
       bucket: config.bucket,
       awsSignatureVersion: '4',
       computeContentMd5: true,
-      // TODO -- decide how to inject / embed Md5 and sha256 hex algorithms
       cryptoMd5Method: function (data) { return AWS.util.crypto.md5(data, 'base64'); },
       cryptoHexEncodedHash256: function (data) { return AWS.util.crypto.sha256(data, 'hex'); }
     })
@@ -65,15 +66,11 @@ function startS3Upload(config) {
       return evap.add({
         name: config.objectKey,
         file: config.file,
-        error: function(msg) { console.error(msg); },
-        info: function(msg) { console.info(msg); },
-        warn: function(msg) { console.warn(msg); },
-        started: function(msg) { console.log('started', msg); },
-        complete: function(msg) { console.log('complete', msg); },
-        uploadInitiated: function(msg) { console.log('uploadInitiated', msg); },
-        progress: function (progress) {
-          console.log('making progress: ' + progress);
-        }
+        error: config.onError,
+        started: config.onStarted,
+        complete: config.onComplete,
+        uploadInitiated: config.onUploadInitiated,
+        progress: config.onProgress,
       });
     })
     .then(resolve)
@@ -117,3 +114,5 @@ function postJson(url, body) {
     xhr.send(JSON.stringify(body));
   });
 }
+
+module.exports = uploadVideo;
