@@ -11,7 +11,8 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'bcuploader.js',
-      'tests/*.js'
+      'tests/*.js',
+      'node_modules/aws-sdk/dist/aws-sdk.min.js'
     ],
 
     // preprocess matching files before serving them to the browser

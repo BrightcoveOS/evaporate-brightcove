@@ -1,7 +1,7 @@
 /* eslint-env browser */
 
 var Evaporate = require('evaporate');
-var AWS = require('aws-sdk');
+var Hashes = require('jshashes');
 
 // Public API
 // - file: a File object from a file input
@@ -42,6 +42,14 @@ function uploadVideo(file, uploadUrl, signerUrl, ingestUrl) { // eslint-disable-
     });
 }
 
+uploadVideo.sha256 = function sha256(data) {
+  return new Hashes.SHA256().hex(data);
+};
+
+uploadVideo.md5 = function md5(data) {
+  return new Hashes.MD5().b64(data);
+};
+
 function startBrightcoveDI(uploadUrl, fileName) {
   return new Promise(function(resolve, reject) {
     return postJson(uploadUrl, {name: fileName})
@@ -59,8 +67,8 @@ function startS3Upload(config) {
       bucket: config.bucket,
       awsSignatureVersion: '4',
       computeContentMd5: true,
-      cryptoMd5Method: function (data) { return AWS.util.crypto.md5(data, 'base64'); },
-      cryptoHexEncodedHash256: function (data) { return AWS.util.crypto.sha256(data, 'hex'); }
+      cryptoMd5Method: uploadVideo.md5,
+      cryptoHexEncodedHash256: uploadVideo.sha256
     })
     .then(function (evap) {
       return evap.add({
