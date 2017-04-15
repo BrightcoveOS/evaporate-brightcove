@@ -2,6 +2,9 @@
 
 var Evaporate = require('evaporate');
 var Hashes = require('jshashes');
+var AWS = require('aws-sdk');
+
+var noop = function(){};
 
 // Public API
 // - file: a File object from a file input
@@ -10,35 +13,48 @@ var Hashes = require('jshashes');
 // - ingestUrl: url to hit on your server when s3 upload is finished to trigger DI job
 // - returns a promise
 function uploadVideo(file, uploadUrl, signerUrl, ingestUrl) { // eslint-disable-line no-unused-vars
-  var bucket, objectKey, videoId, accountId;
+  var config;
 
   return startBrightcoveDI(uploadUrl, file.name)
     .then(function(response) {
-      bucket = response.bucket;
-      objectKey = response.objectKey;
-      videoId = response.videoId;
-      accountId = response.accountId;
+      // TODO: make this overrideable
+      var defaultConfig = {
+        onProgress: noop,
+        onStarted: noop,
+        onComplete: noop,
+        onUploadInitiated: noop,
+        onError: noop
+      };
 
-      return startS3Upload({
+      var serverConfig = {
+        // AWS API entities
         awsAccessKeyId: response.awsAccessKeyId,
-        region: 'us-west-1',
-        videoId: videoId,
-        bucket: bucket,
-        objectKey: objectKey,
-        signerUrl: signerUrl,
+        bucket: response.bucket,
+        objectKey: response.objectKey,
+        region: response.region,
+
+        // Brightcove API entities
+        videoId: response.videoId,
+        accountId: response.accountId
+      };
+
+      var browserConfig = {
         file: file,
-      });
+        uploadUrl: uploadUrl,
+        signerUrl: signerUrl,
+        ingestUrl: ingestUrl
+      };
+
+      // Merge config together
+      config = Object.assign({}, defaultConfig, serverConfig, browserConfig);
+
+      return startS3Upload(config);
     })
     .then(function () {
-      return ingestAsset({
-        ingestUrl: ingestUrl,
-        bucket: bucket,
-        objectKey: objectKey,
-        videoId: videoId,
-      });
+      return ingestAsset(config);
     })
     .then(function () {
-      return embedPlayer(accountId, videoId);
+      return embedPlayer(config.accountId, config.videoId);
     });
 }
 
@@ -67,8 +83,8 @@ function startS3Upload(config) {
       bucket: config.bucket,
       awsSignatureVersion: '4',
       computeContentMd5: true,
-      cryptoMd5Method: uploadVideo.md5,
-      cryptoHexEncodedHash256: uploadVideo.sha256
+      cryptoMd5Method: function (data) { return AWS.util.crypto.md5(data, 'base64'); },
+      cryptoHexEncodedHash256: function (data) { return AWS.util.crypto.sha256(data, 'hex'); }
     })
     .then(function (evap) {
       return evap.add({

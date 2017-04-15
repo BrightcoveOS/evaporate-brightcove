@@ -5,6 +5,7 @@
   "main": "src/bcuploader.js",
   "scripts": {
     "build": "webpack",
+    "example": "npm run build; cd examples/nodejs && npm start",
     "lint": "eslint --ext .js src",
     "pretest": "npm run build",
     "test": "karma start karma.conf.js",
