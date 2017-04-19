@@ -5,7 +5,7 @@
     "quotes": [ "warn", "single", "avoid-escape" ],
     "linebreak-style": [ "error", "unix" ],
     "semi": [ "error", "always" ],
-    "no-console": "warn",
+    "no-console": "allow",
     "no-debugger": "warn",
     "arrow-spacing": "error"
   },

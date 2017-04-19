@@ -1,3 +1,14 @@
 'use strict';
 
-module.exports.main = require('./main');
+function index(req, res) {
+  res.sendFile('index.html', {
+    root: __dirname + '/../../public/'
+  });
+}
+
+module.exports = {
+  index: index,
+  ingest: require('./ingest'),
+  sign: require('./sign'),
+  upload: require('./upload'),
+};

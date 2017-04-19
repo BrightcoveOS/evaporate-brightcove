@@ -5,7 +5,6 @@
 Requirements:
 
  * a compatible version of node (current LTS)
- * redis on port 6379 (the default)
  * a `.env` file with credentials to VideoCloud and AWS S3
 
 ### Installing Node
@@ -18,27 +17,11 @@ Next install the node dependencies:
 npm install
 ```
 
-### Installing Redis
-
-**Option 1: Use homebrew**
-
-```sh
-brew install redis
-```
-
-**Option 2: Use docker**
-
-```sh
-$ docker run -d --name videogram-redis -p 6379:6379 -v "$(pwd)/data:/data" redis
-```
-
 ## Run
 
 ```sh
 npm start
 ```
-
-NOTE: If `npm start` fails, you probably need to configure redis properly.
 
 Navigate to [localhost:3000](http://localhost:300/) to see Videogram in action.
 
