@@ -22,7 +22,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/brycefisher/bcuploader.git"
+    "url": "https://github.com/BrightcoveOS/evaporate-brightcove.git"
   },
   "dependencies": {
     "aws-sdk": "^2.38.0",
