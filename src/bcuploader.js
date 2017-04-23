@@ -1,142 +1,89 @@
-/* eslint-env browser */
-
-var Evaporate = require('evaporate');
-var Hashes = require('jshashes');
-var AWS = require('aws-sdk');
+var ParamParser = require('./param-parser');
+var postJson = require('./post-json');
+var VideoUpload = require('./video-upload');
+var UIRoot = require('./components/root');
 
 var noop = function(){};
 
-// Public API
-// - file: a File object from a file input
-// - uploadUrl: creates BC video id and returns it along with s3 bucket, public key, & object_key
-// - signerUrl: signs each part of the multipart upload, conforms to EvaporateJS signerUrl
-// - ingestUrl: url to hit on your server when s3 upload is finished to trigger DI job
-// - returns a promise
-function uploadVideo(file, uploadUrl, signerUrl, ingestUrl) { // eslint-disable-line no-unused-vars
-  var config;
+function BCUploader(params) {
+  // Protect against forgetting the new keyword when instantiating objects
+  if (!(this instanceof BCUploader)) {
+    return new BCUploader(params);
+  }
 
-  return startBrightcoveDI(uploadUrl, file.name)
-    .then(function(response) {
-      // TODO: make this overrideable
-      var defaultConfig = {
-        onProgress: noop,
-        onStarted: noop,
-        onComplete: noop,
-        onUploadInitiated: noop,
-        onError: noop
-      };
+  var param = ParamParser('BCUploader', params);
 
-      var serverConfig = {
-        // AWS API entities
-        awsAccessKeyId: response.awsAccessKeyId,
-        bucket: response.bucket,
-        objectKey: response.objectKey,
-        region: response.region,
+  // required parameters
+  this.urls = {
+    createVideoEndpoint: param.required('createVideoEndpoint'),
+    signUploadEndpoint: param.required('signUploadEndpoint'),
+    ingestUploadEndpoint: param.required('ingestUploadEndpoint'),
+  },
+  this.root = param.required('root');
 
-        // Brightcove API entities
-        videoId: response.videoId,
-        accountId: response.accountId
-      };
+  // optional callbacks
+  this.callbacks = {
+    onProgress: param.optional('onProgress', noop),
+    onStarted:  param.optional('onStarted', noop),
+    onComplete:  param.optional('onComplete', noop),
+    onUploadInitiated:  param.optional('onUploadInitiated', noop),
+    onError:  param.optional('onError', noop),
 
-      var browserConfig = {
-        file: file,
-        uploadUrl: uploadUrl,
-        signerUrl: signerUrl,
-        ingestUrl: ingestUrl
-      };
+    // onFileSelected MUST be a promise
+    onFileSelected: param.optional('onFileSelected', function() {
+      return Promise.resolve();
+    }),
+  };
 
-      // Merge config together
-      config = Object.assign({}, defaultConfig, serverConfig, browserConfig);
+  // optional UI config
+  this.landingText = param.optional('landingText', 'Drag Video Uploads Here'),
+  this.videoUI = {
+    previewText: param.optional('preivewText', 'Preview'),
+    onPreview: param.optional('onPreview', noop),
+    transcodingDelayMS: param.optional('transcodingDelayMS', 10000),
+    transcodingText: param.optional('transcodingText', 'Transcoding'),
+  };
 
-      return startS3Upload(config);
-    })
-    .then(function () {
-      return ingestAsset(config);
-    })
-    .then(function () {
-      return embedPlayer(config.accountId, config.videoId);
-    });
+  // optional evaporate overrides
+  this.overrides = param.optional('evaporate', {});
+
+  // wire up the UI and wait for user interaction
+  this.setupUI();
 }
 
-uploadVideo.sha256 = function sha256(data) {
-  return new Hashes.SHA256().hex(data);
-};
-
-uploadVideo.md5 = function md5(data) {
-  return new Hashes.MD5().b64(data);
-};
-
-function startBrightcoveDI(uploadUrl, fileName) {
-  return new Promise(function(resolve, reject) {
-    return postJson(uploadUrl, {name: fileName})
-      .then(resolve)
-      .catch(reject);
-  });
-}
-
-function startS3Upload(config) {
-  return new Promise(function(resolve, reject) {
-    Evaporate.create({
-      signerUrl: config.signerUrl + '/' + config.videoId,
-      aws_key: config.awsAccessKeyId,
-      awsRegion: config.region,
-      bucket: config.bucket,
-      awsSignatureVersion: '4',
-      computeContentMd5: true,
-      cryptoMd5Method: function (data) { return AWS.util.crypto.md5(data, 'base64'); },
-      cryptoHexEncodedHash256: function (data) { return AWS.util.crypto.sha256(data, 'hex'); }
-    })
-    .then(function (evap) {
-      return evap.add({
-        name: config.objectKey,
-        file: config.file,
-        error: config.onError,
-        started: config.onStarted,
-        complete: config.onComplete,
-        uploadInitiated: config.onUploadInitiated,
-        progress: config.onProgress,
+BCUploader.prototype.setupUI = function setupUI() {
+  var self = this;
+  this.rootEl = document.getElementById(this.root);
+  this.ui = new UIRoot({
+    landingText: this.landingText,
+    onFileSelected: function(file) {
+      self.callbacks.onFileSelected(file).then(function() {
+        self.createVideo(file);
       });
-    })
-    .then(resolve)
-    .catch(reject);
+    },
   });
-}
 
-function ingestAsset(config) {
-  var ingestUrl = config.ingestUrl + '/' + config.videoId;
-  return postJson(ingestUrl, {
-    bucket: config.bucket,
-    objectKey: config.objectKey,
-  });
-}
+  this.render();
+};
 
-function embedPlayer(accountId, videoId) {
-  return new Promise(function (resolve) {
-    var iframe = document.createElement('div');
-    iframe.innerHTML = '<iframe src="//players.brightcove.net/' + accountId + '/default_default/index.html?videoId=' + videoId + '" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>';
-    iframe.innerHTML += '<code>&lt;iframe src="//players.brightcove.net/' + accountId + '/default_default/index.html?videoId=' + videoId + '" allowfullscreen webkitallowfullscreen mozallowfullscreen&gt;&lt;/iframe&gt;';
-    iframe.innerHTML += '<a href="//players.brightcove.net/' + accountId + '/default_default/index.html?videoId=' + videoId + '">View in Player</a>';
-    document.getElementsByTagName('body')[0].appendChild(iframe);
-    resolve();
-  });
-}
+BCUploader.prototype.render = function render() {
+  this.rootEl.innerHTML = '';
+  this.rootEl.appendChild(this.ui.render());
+};
 
-function postJson(url, body) {
-  return new Promise(function(resolve, reject) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', url);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.onreadystatechange = function() {
-      if (this.readyState === 4) {
-        if (this.status === 200) {
-          resolve(JSON.parse(this.response));
-        } else {
-          reject(this);
-        }
-      }
-    };
-    xhr.send(JSON.stringify(body));
-  });
-}
+BCUploader.prototype.createVideo = function createVideo(file) {
+  var self = this;
+  return postJson(this.urls.createVideoEndpoint, {name: file.name})
+    .then(function(response) {
+      var params = Object.assign(response, self.callbacks, self.urls, {
+        file: file,
+        ui: self.videoUI,
+        overrides: self.overrides
+      });
+      var video = new VideoUpload(params);
+      self.ui.addVideo(video.ui);
+      return video;
+    });
+};
 
-module.exports = uploadVideo;
+module.exports = BCUploader;
