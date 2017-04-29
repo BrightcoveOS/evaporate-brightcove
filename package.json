@@ -7,7 +7,7 @@
     "start": "npm run example",
     "build": "webpack",
     "preexample": "npm run watch-bg",
-    "example": "npm run build; cd examples/nodejs && npm start",
+    "example": "npm run build; cd examples/nodejs && npm && install && npm start",
     "lint": "eslint --ext .js src",
     "watch-bg": "webpack --watch &",
     "pretest": "npm run watch-bg",
