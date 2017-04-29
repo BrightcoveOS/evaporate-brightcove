@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Sample Nodejs App</title>
+  <title>Evaporate Brightcove - multi-part uploader directly to S3 from the browser for easy integration with Brightcove Video Cloud</title>
   <meta name="description" content="">
   <meta name="author" content="">
 
@@ -34,6 +34,38 @@
     <p>See the <a href="https://github.com/BrightcoveOS/evaporate-brightcove">Quick Start Guide</a> to start using Evaporate Brightcove in your project!</p>
 
     <div id="bcuploader"></div>
+
+    <h3>Features</h3>
+    <ul style="column-width: 300px; column-gap: 2em;">
+      <li>
+        <h4>Multi-part</h4>
+        <p>Each video is broken into many pieces and uploaded simultaneously to maximize available bandwidth and only retry failed parts -- not the entire video.</p>
+      </li>
+      <li>
+        <h4>Direct to S3</h4>
+        <p>Don't put extra load on your servers -- upload directly to S3 saving you time and making uploads faster!</p>
+      </li>
+      <li>
+        <h4>Configurable</h4>
+        <p>Change any text provided, easily instrument all phases of the upload and failure, tweak Evaporate.js settings directly</p>
+      </li>
+      <li>
+        <h4>Custom Validation</h4>
+        <p>Bring your own video validation logic! Don't want 1080p? Check in the browser before you upload</p>
+      </li>
+      <li>
+        <h4>Es6 Friendly</h4>
+        <p>Uses Webpack and Commonjs internally, but also available as a standalone UMD module.</p>
+      </li>
+      <li>
+        <h4>Documented</h4>
+        <p>Every configuration option is documented</p>
+      </li>
+      <li>
+        <h4>Battle Tested</h4>
+        <p>Built on top of the leading upload library, Evaporate.js</p>
+      </li>
+    </ul>
 
     <script type="text/javascript">
       function init() {
