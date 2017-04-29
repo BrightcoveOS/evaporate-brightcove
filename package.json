@@ -4,16 +4,25 @@
   "description": "Standalone video uploader for Brightcove OVP",
   "main": "src/bcuploader.js",
   "scripts": {
-    "start": "npm run example",
-    "build": "webpack",
-    "preexample": "npm run watch-bg",
-    "example": "npm run build; cd examples/nodejs && npm && install && npm start",
     "lint": "eslint --ext .js src",
-    "watch-bg": "webpack --watch &",
-    "pretest": "npm run watch-bg",
+    "webpack:build": "webpack",
+    "webpack:watch": "webpack --watch &",
+    "example": "cd examples/nodejs && npm start",
+
+    "prestart": "npm run webpack:build",
+    "start": "npm run example",
+
+    "prewatch": "npm run webpack:watch",
+    "watch": "npm run example",
+
+    "pretest": "npm run webpack:watch",
     "test": "karma start karma.conf.js",
-    "pretravis": "npm run build",
-    "travis": "karma start karma.conf.js --single-run"
+
+    "pretravis": "npm run webpack:build",
+    "travis": "karma start karma.conf.js --single-run",
+
+    "preheroku": "cd examples/nodejs && npm install",
+    "heroku": "npm start"
   },
   "keywords": [
     "brightcove",
@@ -30,7 +39,7 @@
   "dependencies": {
     "aws-sdk": "^2.38.0",
     "evaporate": "^2.1.0",
-    "jshashes": "^1.0.6"
+    "webpack": "^2.3.3"
   },
   "devDependencies": {
     "chai": "^3.5.0",
@@ -42,7 +51,6 @@
     "karma-firefox-launcher": "^1.0.1",
     "karma-jasmine": "^1.1.0",
     "karma-mocha": "^1.3.0",
-    "mocha": "^3.2.0",
-    "webpack": "^2.3.3"
+    "mocha": "^3.2.0"
   }
 }
