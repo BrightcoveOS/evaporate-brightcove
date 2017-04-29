@@ -4,6 +4,7 @@
   "description": "Standalone video uploader for Brightcove OVP",
   "main": "src/bcuploader.js",
   "scripts": {
+    "start": "npm run example",
     "build": "webpack",
     "preexample": "npm run watch-bg",
     "example": "npm run build; cd examples/nodejs && npm start",
