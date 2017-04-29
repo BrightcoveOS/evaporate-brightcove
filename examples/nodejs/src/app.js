@@ -5,6 +5,7 @@ var express = require('express');
 var expressLogger = require('express-bunyan-logger');
 
 var controllers = require('./controllers');
+var config = require('./config');
 
 var app = express();
 
@@ -25,6 +26,6 @@ app.post('/ingest/:videoId', controllers.ingest);
 app.post('/upload', controllers.upload);
 app.use('/static/js', express.static('../..'));
 
-app.listen(3000, function() {
-  console.log('listening at port ' + 3000);
+app.listen(config.port, function() {
+  console.log('listening at port ' + config.port);
 });

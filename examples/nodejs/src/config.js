@@ -5,6 +5,8 @@ require('dotenv').config();
 Error.stackTraceLimit = 50;
 
 var config = {
+  port: process.env.PORT || 3000,
+
   brightcove: {
     accountId: process.env.BRIGHTCOVE_ACCOUNT_ID,
     client: {
