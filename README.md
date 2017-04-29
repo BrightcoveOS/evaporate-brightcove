@@ -19,11 +19,13 @@ Evaporate Brightcove is an npm module providing JavaScript for use in the browse
     * custom validation prior to upload
  * Wraps battle tested library [Evaporate.js](https://www.npmjs.com/package/evaporate) -- allows you pass any options you want!
 
-## Node.js Example
+## Try the Node.js Example
 
-See the [Node.js example README](./examples/nodejs/README.md) for a fully functional simple example.
+See this [app running](https://evaporate-brightcove.herokuapp.com/) in Heroku right now!
 
-## Quick Start
+Clone this repo and play with the the [Node.js example source code](./examples/nodejs/README.md) for a fully functional simple example.
+
+## Quick Start Guide
 
 See the [quick start guide](./docs/quick-start.md).
 
