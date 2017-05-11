@@ -1,6 +1,6 @@
 {
   "name": "bcuploader",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Standalone video uploader for Brightcove OVP",
   "main": "src/bcuploader.js",
   "scripts": {
