@@ -38,10 +38,13 @@ You must already have Node.js installed on your platform and have npm (or yarn) 
 
 ```sh
 git clone https://github.com/BrightcoveOS/evaporate-brightcove.git
-cp evaporate-brightcove/examples/nodejs my-app
-cd my-app
+cd evaporate-brightcove/examples/nodejs
+npm install
+cd ../..
 npm install
 cp .env-sample .env
+vim .env  # Replace dummy credentials with real values
+npm start
 ```
 
 Open .env in your text editor and replace all the values there with the credentials from above.
