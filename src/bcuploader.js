@@ -46,7 +46,7 @@ function BCUploader(params) {
 
   // Video UI config
   this.videoUI = {
-    previewText: param.optional('preivewText', 'Preview'),
+    previewText: param.optional('previewText', 'Preview'),
     updatePreview: this.ui.preview.update.bind(this.ui.preview),
     onPreview: param.optional('onPreview', defaultPreviewAction),
     playerId: param.optional('playerId', 'default'),
